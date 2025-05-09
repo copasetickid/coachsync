@@ -2,15 +2,15 @@ FactoryBot.define do
   factory :user do
     sequence(:email) { |n| "user#{n}@example.com" }
     timezone { "UTC" }
-    role { UserRoles::STUDENT }
 
-    factory :coach do
+    trait :coach do
       role { UserRoles::COACH }
       phone { Faker::PhoneNumber.cell_phone }
     end
 
-    factory :student do
+    trait :student do
       role { UserRoles::STUDENT }
+      phone { Faker::PhoneNumber.cell_phone }
     end
   end
 end

@@ -3,25 +3,23 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   describe "validations" do
     it "is valid with valid attributes" do
-      user = build(:coach,
-                    name: "John Doe",
-                    email: "john@example.com",
+      user = build(:user, :coach,
+                    name:  Faker::Name.name,
                     timezone: "America/New_York")
       expect(user).to be_valid
     end
 
     it "is not valid without a name" do
-      user = build(:coach,
-                   email: "john@example.com",
+      user = build(:user, :coach,
+                   name: " ",
                    timezone: "America/New_York")
       expect(user).not_to be_valid
       expect(user.errors[:name]).to include("can't be blank")
     end
 
     it "is not valid without a phone number" do
-      user = build(:coach,
-                   email: "john@example.com",
-                   phone: " ",
+      user = build(:user, :coach,
+                   phone: "",
                    timezone: "America/New_York")
       expect(user).not_to be_valid
       expect(user.errors[:name]).to include("can't be blank")
@@ -29,7 +27,7 @@ RSpec.describe User, type: :model do
 
 
     it "is not valid without an email" do
-      user = build(:coach,
+      user = build(:user, :coach,
                    email: " ",
                    name: "John Doe",
                    timezone: "America/New_York")
@@ -38,7 +36,7 @@ RSpec.describe User, type: :model do
     end
 
     it "is not valid without a valid timezone" do
-      user = build(:coach,
+      user = build(:user, :coach,
                     name: "John Doe",
                     email: "john@example.com",
                     timezone: "Saturn")
@@ -58,7 +56,7 @@ RSpec.describe User, type: :model do
     end
 
     it "requires a unique email" do
-      create(:coach,
+      create(:user, :coach,
              name: "John Doe",
              phone: Faker::PhoneNumber.cell_phone,
              email: "john@example.com",
