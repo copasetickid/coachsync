@@ -1,0 +1,26 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">Find a Coach</h1>
+
+  <% if @coaches.empty? %>
+    <div class="bg-white shadow rounded-lg p-6 text-center">
+      <p class="text-gray-500">No coaches are currently available.</p>
+    </div>
+  <% else %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% @coaches.each do |coach| %>
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <div class="p-6">
+            <h2 class="text-xl font-semibold mb-2"><%= coach.name %></h2>
+
+
+
+            <div class="mt-4">
+              <%= link_to "See Available Sessions", coach_browser_path(coach),
+                          class: "block w-full text-center bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,64 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold"><%= @coach.name %></h1>
+    </div>
+
+    <%= link_to "Back to Coaches", coach_browser_index_path,
+                class: "text-indigo-600 hover:text-indigo-800" %>
+  </div>
+
+  <!-- Coach Bio -->
+  <% if @coach.coach_profile.bio.present? %>
+    <div class="bg-white shadow rounded-lg p-6 mb-8">
+      <h2 class="text-lg font-semibold mb-3">About</h2>
+      <div class="text-gray-700 whitespace-pre-line">
+        <%= @coach.coach_profile.bio %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Available Sessions -->
+  <div class="bg-white shadow rounded-lg overflow-hidden mb-8">
+    <div class="bg-gray-50 px-4 py-5 border-b border-gray-200 sm:px-6">
+      <h2 class="text-lg font-medium text-gray-900">
+        Available Sessions
+      </h2>
+    </div>
+
+    <% if @slots_by_date.empty? %>
+      <div class="p-6 text-center">
+        <p class="text-gray-500">No available sessions for the next two weeks.</p>
+      </div>
+    <% else %>
+      <div class="p-6">
+        <% (@today..@end_date).each do |date| %>
+          <% if @slots_by_date[date].present? %>
+            <div class="mb-6 last:mb-0">
+              <h3 class="text-md font-medium mb-3 pb-2 border-b">
+                <%= date.strftime("%A, %B %d, %Y") %>
+                <% if date == Date.today %>
+                  <span class="ml-2 text-sm text-indigo-600 font-normal">Today</span>
+                <% end %>
+              </h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                <% @slots_by_date[date].each do |slot| %>
+                  <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
+                    <p class="font-medium mb-2">
+                      <%= slot.start_time.strftime("%I:%M %p") %> - <%= slot.end_time.strftime("%I:%M %p") %>
+                    </p>
+
+                    <%= button_to "Book Session", bookings_path(availability_id: slot.id),
+                                  method: :post,
+                                  class: "w-full mt-2 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

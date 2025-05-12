@@ -34,4 +34,10 @@ Rails.application.routes.draw do
   resources :users, only: [:show, :edit, :update] do
     resources :availabilities, only: [:index, :new, :create, :destroy]
   end
+
+  # Routes for student to browse coaches
+  resources :coach_browser, only: [:index, :show]
+
+  # Routes for bookings
+  resources :bookings, only: [:index, :create, :destroy]
 end
