@@ -1,0 +1,238 @@
+<!-- app/views/availabilities/index.html.erb -->
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">Manage Your Availability</h1>
+
+    <%= link_to "Add New Availability", new_user_availability_path(@coach),
+                class: "bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" %>
+  </div>
+
+  <!-- Available vs Booked Tabs -->
+  <div class="mb-6">
+    <div class="border-b border-gray-200">
+      <nav class="-mb-px flex space-x-8">
+        <a href="#available-slots" class="border-indigo-500 text-indigo-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+           onclick="showTab('available-slots'); return false;">
+          Available Slots
+        </a>
+        <a href="#booked-slots" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+           onclick="showTab('booked-slots'); return false;">
+          Booked Sessions
+        </a>
+        <a href="#calendar-view" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+           onclick="showTab('calendar-view'); return false;">
+          Calendar View
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Available Slots Tab -->
+  <div id="available-slots" class="tab-content">
+    <div class="bg-white shadow overflow-hidden rounded-lg mb-6">
+      <div class="px-4 py-5 sm:px-6 bg-gray-50">
+        <h2 class="text-lg font-medium">Your Available Slots</h2>
+        <p class="text-sm text-gray-500">These time slots are available for students to book.</p>
+      </div>
+
+      <% if @upcoming_availabilities.any? %>
+        <ul class="divide-y divide-gray-200">
+          <% @upcoming_availabilities.each do |slot| %>
+            <li class="p-4 hover:bg-gray-50">
+              <div class="flex justify-between items-center">
+                <div>
+                  <p class="font-medium"><%= slot.start_time.strftime("%A, %B %d, %Y") %></p>
+                  <p class="text-gray-600">
+                    <%= slot.start_time.strftime("%I:%M %p") %> -
+                    <%= slot.end_time.strftime("%I:%M %p") %>
+                  </p>
+                </div>
+
+                <div>
+                  <%= button_to user_availability_path(@coach, slot),
+                                method: :delete,
+                                data: { confirm: "Are you sure you want to cancel this availability slot?" },
+                                class: "text-red-600 hover:text-red-800 text-sm" do %>
+                    Cancel Slot
+                  <% end %>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+
+        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+          <%= link_to "Add More Slots", new_user_availability_path(@coach),
+                      class: "bg-indigo-100 text-indigo-700 px-4 py-2 rounded hover:bg-indigo-200" %>
+        </div>
+      <% else %>
+        <div class="p-8 text-center">
+          <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-gray-100">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No available slots</h3>
+          <p class="mt-1 text-sm text-gray-500">Get started by creating a new availability slot.</p>
+          <div class="mt-6">
+            <%= link_to "Add New Availability", new_user_availability_path(@coach),
+                        class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Booked Sessions Tab -->
+  <div id="booked-slots" class="tab-content hidden">
+    <div class="bg-white shadow overflow-hidden rounded-lg mb-6">
+      <div class="px-4 py-5 sm:px-6 bg-gray-50">
+        <h2 class="text-lg font-medium">Your Booked Sessions</h2>
+        <p class="text-sm text-gray-500">These slots have been booked by students.</p>
+      </div>
+
+      <% if @booked_availabilities.any? %>
+        <ul class="divide-y divide-gray-200">
+          <% @booked_availabilities.each do |booking| %>
+            <li class="p-4 hover:bg-gray-50">
+              <div class="flex justify-between items-center">
+                <div>
+                  <p class="font-medium"><%= booking.start_time.strftime("%A, %B %d, %Y") %></p>
+                  <p class="text-gray-600">
+                    <%= booking.start_time.strftime("%I:%M %p") %> -
+                    <%= booking.end_time.strftime("%I:%M %p") %>
+                  </p>
+                  <p class="text-gray-800 mt-1">
+                    Student: <%= booking.student.name %>
+                  </p>
+                </div>
+
+                <div>
+                  <%= link_to "View Details", coaching_session_path(booking.coaching_session),
+                              class: "text-indigo-600 hover:text-indigo-800 text-sm" %>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="p-8 text-center">
+          <p class="text-gray-500">You don't have any booked sessions yet.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Calendar View Tab -->
+  <div id="calendar-view" class="tab-content hidden">
+    <div class="bg-white shadow overflow-hidden rounded-lg">
+      <div class="px-4 py-5 sm:px-6 bg-gray-50">
+        <div class="flex justify-between items-center">
+          <h2 class="text-lg font-medium">Calendar View</h2>
+
+          <div class="flex space-x-2">
+            <button class="bg-gray-200 hover:bg-gray-300 rounded px-3 py-1 text-sm"
+                    onclick="changeCalendarWeek(-1)">
+              Previous Week
+            </button>
+            <button class="bg-gray-200 hover:bg-gray-300 rounded px-3 py-1 text-sm"
+                    onclick="changeCalendarWeek(1)">
+              Next Week
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="calendar-container p-4">
+        <div class="grid grid-cols-8 gap-2 text-center text-sm font-medium border-b pb-2 mb-2">
+          <div class="col-span-1"></div>
+          <% (0..6).each do |day_offset| %>
+            <% date = @today + day_offset.days %>
+            <div class="<%= 'bg-indigo-100 rounded-t' if date == @today %>">
+              <%= date.strftime("%a") %><br>
+              <%= date.strftime("%m/%d") %>
+            </div>
+          <% end %>
+        </div>
+
+        <% time_slots = (8..20).map { |hour| "#{hour}:00" } %>
+        <% time_slots.each do |time_slot| %>
+          <div class="grid grid-cols-8 gap-2 border-b py-2">
+            <div class="text-xs text-right pr-2 font-medium"><%= time_slot %></div>
+
+            <% (0..6).each do |day_offset| %>
+              <% date = @today + day_offset.days %>
+              <% time = Time.zone.parse("#{date.to_s} #{time_slot}") %>
+
+              <% slot = @availabilities_by_time[time.strftime("%Y-%m-%d %H:00")] %>
+              <div class="min-h-[40px] relative rounded
+                          <%= slot ? (slot.booked? ? 'bg-red-100' : 'bg-green-100') : 'bg-gray-50' %>">
+                <% if slot %>
+                  <div class="absolute inset-0 flex items-center justify-center text-xs">
+                    <% if slot.booked? %>
+                      <span>Booked by <%= slot.student.name %></span>
+                    <% else %>
+                      <span>Available</span>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="mt-4 flex justify-between items-center">
+          <div class="flex items-center space-x-4">
+            <div class="flex items-center">
+              <div class="w-4 h-4 bg-green-100 rounded mr-1"></div>
+              <span class="text-sm">Available</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-4 h-4 bg-red-100 rounded mr-1"></div>
+              <span class="text-sm">Booked</span>
+            </div>
+          </div>
+
+          <div>
+            <%= link_to "Add New Availability", new_user_availability_path(@coach),
+                        class: "text-indigo-600 hover:text-indigo-800 text-sm" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<script>
+    function showTab(tabId) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.add('hidden');
+        });
+
+        // Show the selected tab
+        document.getElementById(tabId).classList.remove('hidden');
+
+        // Update active tab styling
+        document.querySelectorAll('nav a').forEach(link => {
+            link.classList.remove('border-indigo-500', 'text-indigo-600');
+            link.classList.add('border-transparent', 'text-gray-500');
+        });
+
+        const activeLink = document.querySelector(`a[href="#${tabId}"]`);
+        activeLink.classList.remove('border-transparent', 'text-gray-500');
+        activeLink.classList.add('border-indigo-500', 'text-indigo-600');
+    }
+
+    let currentStartDate = new Date('<%= @today.strftime("%Y-%m-%d") %>');
+
+    function changeCalendarWeek(weekOffset) {
+        currentStartDate.setDate(currentStartDate.getDate() + (weekOffset * 7));
+        // Here you would make an AJAX call to refresh the calendar with the new date range
+        // For simplicity, we'll just redirect
+        window.location.href = '<%= user_availabilities_path(@coach) %>?date=' +
+            currentStartDate.toISOString().split('T')[0];
+    }
+</script>

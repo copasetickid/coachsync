@@ -1,0 +1,65 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold">Add New Availability</h1>
+    <p class="text-gray-600">Create a new 2-hour time slot when you're available for coaching.</p>
+  </div>
+
+  <div class="bg-white shadow overflow-hidden rounded-lg">
+    <%= form_with(model: [@coach, @availability], url: user_availabilities_path(@coach), class: "p-6") do |form| %>
+      <% if @availability.errors.any? %>
+        <div class="mb-6 bg-red-50 p-4 rounded-lg">
+          <div class="text-red-800 font-medium">
+            <%= pluralize(@availability.errors.count, "error") %> prohibited this availability from being saved:
+          </div>
+          <ul class="mt-2 list-disc list-inside text-sm text-red-700">
+            <% @availability.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="mb-6">
+        <%= form.label :date, "Date", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.date_field :date, required: true,
+                            min: Date.today,
+                            class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <%= form.label :start_time, "Start Time", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.time_field :start_time, required: true,
+                              class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+          <p class="mt-1 text-sm text-gray-500">All sessions are 2 hours long.</p>
+        </div>
+
+      </div>
+
+      <div class="border-t border-gray-200 pt-4 mt-4">
+        <div class="flex justify-between">
+          <%= link_to "Cancel", user_availabilities_path(@coach),
+                      class: "px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" %>
+
+          <%= form.submit "Create Availability",
+                          class: "px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-8">
+    <div class="bg-white shadow overflow-hidden rounded-lg">
+      <div class="px-4 py-5 sm:px-6 bg-gray-50">
+        <h2 class="text-lg font-medium">Quick Add Multiple Slots</h2>
+      </div>
+
+      <div class="p-6">
+        <p class="text-gray-600 mb-4">Need to add multiple slots at once? Use our <a href="#" class="text-indigo-600 hover:text-indigo-800">recurring availability</a> feature.</p>
+
+        <%= link_to "Set Recurring Availability", user_availabilities_path(@coach, anchor: "recurring"),
+                    class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200" %>
+      </div>
+    </div>
+  </div>
+</div>
