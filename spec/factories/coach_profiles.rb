@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :coach_profile do
-    association :user, factory: user, role: UserRoles::COACH
+    association :user,  factory: [ :user, :coach ]
     bio { "Very experienced at coaching"}
 
     trait :active_coach do

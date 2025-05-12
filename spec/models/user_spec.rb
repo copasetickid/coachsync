@@ -22,7 +22,7 @@ RSpec.describe User, type: :model do
                    phone: "",
                    timezone: "America/New_York")
       expect(user).not_to be_valid
-      expect(user.errors[:name]).to include("can't be blank")
+      expect(user.errors[:phone]).to include("can't be blank")
     end
 
 
