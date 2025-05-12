@@ -1,0 +1,50 @@
+<nav class="bg-white shadow-sm border-b">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <!-- Left side -->
+      <div class="flex">
+        <!-- Logo -->
+        <div class="flex-shrink-0 flex items-center">
+          <%= link_to "Coaching Sync", root_path, class: "text-xl font-bold text-gray-900" %>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
+          <% if user_signed_in? %>
+            <% if current_user.student? %>
+              <!-- Student Navigation -->
+              <%= link_to "Dashboard", root_path,
+                          class: nav_link_classes(root_path) %>
+              <%= link_to "Find Coaches", coach_browser_index_path,
+                          class: nav_link_classes(coach_browser_index_path) %>
+              <%= link_to "My Sessions", bookings_path,
+                          class: nav_link_classes(bookings_path) %>
+
+            <% elsif current_user.coach? %>
+              <!-- Coach Navigation -->
+              <%= link_to "Dashboard", root_path,
+                          class: nav_link_classes(root_path) %>
+              <%= link_to "My Sessions", session_feedbacks_path,
+                          class: nav_link_classes(session_feedbacks_path) %>
+              <%= link_to "Availability", user_availabilities_path(current_user),
+                          class: nav_link_classes(user_availabilities_path(current_user)) %>
+              <%= link_to "Profile", user_coach_profile_path(current_user),
+                          class: nav_link_classes(user_coach_profile_path(current_user)) %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Right side -->
+      <div class="flex items-center space-x-4">
+        <% if user_signed_in? %>
+          <% if Rails.env.development? || Rails.env.test? %>
+
+            <%= link_to "Switch User", user_switcher_path,
+                          class: "text-teal-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -11,4 +11,11 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  root to: "home#index"
+
+  if Rails.env.development? || Rails.env.test?
+    get "user_switcher", to: "user_switcher#index"
+    get "switch_user/:user_id", to: "user_switcher#switch", as: "switch_user"
+    post "reset_user", to: "user_switcher#reset", as: "reset_user"
+  end
 end

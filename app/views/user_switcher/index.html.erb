@@ -1,0 +1,61 @@
+<!-- app/views/user_switcher/index.html.erb -->
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">User Switcher</h1>
+
+  <% if session[:user_id] %>
+    <div class="bg-yellow-100 p-4 mb-6 rounded-lg">
+      <p class="text-center">
+        Want to completely Log out?</p>
+        <div class="flex justify-center">
+          <%= button_to "Reset User Session", reset_user_path, method: :post,
+                        class: "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-200" %>
+        </div>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="bg-white shadow rounded-lg p-6">
+      <h2 class="text-xl font-semibold mb-4">Coaches</h2>
+      <ul class="divide-y divide-gray-200">
+        <% @coaches.each do |coach| %>
+          <li class="py-3">
+            <div class="flex justify-between items-center">
+              <span class="<%= coach.id.to_s == @current_user_id.to_s ? 'font-bold' : '' %>">
+                <%= coach.name %>
+                (<%= coach.email %>)
+                <% if coach.id.to_s == @current_user_id.to_s %>
+                  <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded ml-2">Current</span>
+                <% end %>
+              </span>
+
+              <%= link_to "Switch to", switch_user_path(coach),
+                          class: "bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded" %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="bg-white shadow rounded-lg p-6">
+      <h2 class="text-xl font-semibold mb-4">Students</h2>
+      <ul class="divide-y divide-gray-200">
+        <% @students.each do |student| %>
+          <li class="py-3">
+            <div class="flex justify-between items-center">
+              <span class="<%= student.id.to_s == @current_user_id.to_s ? 'font-bold' : '' %>">
+                <%= student.name %>
+                (<%= student.email %>)
+                <% if student.id.to_s == @current_user_id.to_s %>
+                  <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded ml-2">Current</span>
+                <% end %>
+              </span>
+
+              <%= link_to "Switch to", switch_user_path(student),
+                          class: "bg-purple-500 hover:bg-purple-700 text-white px-3 py-1 rounded" %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
