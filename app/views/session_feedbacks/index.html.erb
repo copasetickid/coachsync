@@ -1,0 +1,179 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">Coaching Sessions</h1>
+
+  <!-- Tabs -->
+  <div class="mb-6">
+    <div class="border-b border-gray-200">
+      <nav class="-mb-px flex space-x-8">
+        <a href="#upcoming" class="border-indigo-500 text-indigo-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+           onclick="showTab('upcoming'); return false;">
+          Upcoming Sessions
+        </a>
+        <a href="#pending-feedback" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+           onclick="showTab('pending-feedback'); return false;">
+          Pending Feedback
+        </a>
+        <a href="#completed" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+           onclick="showTab('completed'); return false;">
+          Completed Sessions
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Upcoming Sessions Tab -->
+  <div id="upcoming" class="tab-content">
+    <div class="bg-white shadow overflow-hidden rounded-lg">
+      <div class="px-4 py-5 sm:px-6 bg-gray-50">
+        <h2 class="text-lg font-medium">Upcoming Sessions</h2>
+        <p class="text-sm text-gray-500">Your scheduled coaching sessions with students.</p>
+      </div>
+
+      <% if @upcoming_sessions.any? %>
+        <ul class="divide-y divide-gray-200">
+          <% @upcoming_sessions.each do |session| %>
+            <li class="p-4 hover:bg-gray-50">
+              <div class="flex justify-between items-center">
+                <div>
+                  <p class="font-medium"><%= session.availability.start_time.strftime("%A, %B %d, %Y") %></p>
+                  <p class="text-gray-600">
+                    <%= session.availability.start_time.strftime("%I:%M %p") %> -
+                    <%= session.availability.end_time.strftime("%I:%M %p") %>
+                  </p>
+                  <p class="text-gray-800 mt-1">
+                    Student: <%= session.student.name %>
+                  </p>
+                </div>
+
+                <div>
+                  <%= link_to "View Details", coaching_session_path(session),
+                              class: "text-indigo-600 hover:text-indigo-800 text-sm" %>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="p-8 text-center">
+          <p class="text-gray-500">You don't have any upcoming coaching sessions.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Pending Feedback Tab -->
+  <div id="pending-feedback" class="tab-content hidden">
+    <div class="bg-white shadow overflow-hidden rounded-lg">
+      <div class="px-4 py-5 sm:px-6 bg-gray-50">
+        <h2 class="text-lg font-medium">Sessions Pending Feedback</h2>
+        <p class="text-sm text-gray-500">Past sessions that need your feedback.</p>
+      </div>
+
+      <% if @pending_feedback_sessions.any? %>
+        <ul class="divide-y divide-gray-200">
+          <% @pending_feedback_sessions.each do |session| %>
+            <li class="p-4 hover:bg-gray-50">
+              <div class="flex justify-between items-center">
+                <div>
+                  <p class="font-medium"><%= session.availability.start_time.strftime("%A, %B %d, %Y") %></p>
+                  <p class="text-gray-600">
+                    <%= session.availability.start_time.strftime("%I:%M %p") %> -
+                    <%= session.availability.end_time.strftime("%I:%M %p") %>
+                  </p>
+                  <p class="text-gray-800 mt-1">
+                    Student: <%= session.student.name %>
+                  </p>
+                </div>
+
+                <div>
+                  <%= link_to "Provide Feedback", edit_session_feedback_path(session),
+                              class: "bg-indigo-100 text-indigo-800 py-2 px-4 rounded hover:bg-indigo-200 text-sm" %>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="p-8 text-center">
+          <p class="text-gray-500">You don't have any sessions waiting for feedback.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Completed Sessions Tab -->
+  <div id="completed" class="tab-content hidden">
+    <div class="bg-white shadow overflow-hidden rounded-lg">
+      <div class="px-4 py-5 sm:px-6 bg-gray-50">
+        <h2 class="text-lg font-medium">Completed Sessions</h2>
+        <p class="text-sm text-gray-500">Your past coaching sessions with feedback.</p>
+      </div>
+
+      <% if @completed_sessions.any? %>
+        <ul class="divide-y divide-gray-200">
+          <% @completed_sessions.each do |session| %>
+            <li class="p-4 hover:bg-gray-50">
+              <div class="flex justify-between items-center">
+                <div>
+                  <p class="font-medium"><%= session.availability.start_time.strftime("%A, %B %d, %Y") %></p>
+                  <p class="text-gray-600">
+                    <%= session.availability.start_time.strftime("%I:%M %p") %> -
+                    <%= session.availability.end_time.strftime("%I:%M %p") %>
+                  </p>
+                  <p class="text-gray-800 mt-1">
+                    Student: <%= session.student.name %>
+                  </p>
+                  <% if session.satisfaction_score %>
+                    <div class="flex items-center mt-1">
+                      <% session.satisfaction_score.times do %>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      <% end %>
+                      <% (5 - session.satisfaction_score).times do %>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+
+                <div>
+                  <%= link_to "View Details", coaching_session_path(session),
+                              class: "text-indigo-600 hover:text-indigo-800 text-sm" %>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="p-8 text-center">
+          <p class="text-gray-500">You don't have any completed sessions yet.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+    function showTab(tabId) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.add('hidden');
+        });
+
+        // Show the selected tab
+        document.getElementById(tabId).classList.remove('hidden');
+
+        // Update active tab styling
+        document.querySelectorAll('nav a').forEach(link => {
+            link.classList.remove('border-indigo-500', 'text-indigo-600');
+            link.classList.add('border-transparent', 'text-gray-500');
+        });
+
+        const activeLink = document.querySelector(`a[href="#${tabId}"]`);
+        activeLink.classList.remove('border-transparent', 'text-gray-500');
+        activeLink.classList.add('border-indigo-500', 'text-indigo-600');
+    }
+</script>

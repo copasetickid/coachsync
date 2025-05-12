@@ -38,6 +38,16 @@ Rails.application.routes.draw do
   # Routes for student to browse coaches
   resources :coach_browser, only: [:index, :show]
 
-  # Routes for bookings
+  # Routes for bookings for Student session view
   resources :bookings, only: [:index, :create, :destroy]
+
+  # Session feedback for coaches
+  resources :coaching_sessions, only: [:index, :show, :update] do
+    member do
+      post "complete"
+      post "cancel"
+    end
+  end
+
+  resources :session_feedbacks, only: [:index, :edit, :update]
 end

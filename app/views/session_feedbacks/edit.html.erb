@@ -1,0 +1,54 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold">Provide Session Feedback</h1>
+    <p class="text-gray-600">
+      Session with <%= @coaching_session.student.name %> on
+      <%= @coaching_session.availability.start_time.strftime("%A, %B %d, %Y at %I:%M %p") %>
+    </p>
+  </div>
+
+  <div class="bg-white shadow overflow-hidden rounded-lg">
+    <%= form_with(model: @coaching_session, url: session_feedback_path(@coaching_session), method: :patch, class: "p-6") do |form| %>
+      <% if @coaching_session.errors.any? %>
+        <div class="mb-6 bg-red-50 p-4 rounded-lg">
+          <div class="text-red-800 font-medium">
+            <%= pluralize(@coaching_session.errors.count, "error") %> prohibited this feedback from being saved:
+          </div>
+          <ul class="mt-2 list-disc list-inside text-sm text-red-700">
+            <% @coaching_session.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="mb-6">
+        <%= form.label :satisfaction_score, "Session Rating (1-5)", class: "block text-sm font-medium text-gray-700 mb-3" %>
+        <div class="flex space-x-4">
+          <% (1..5).each do |rating| %>
+            <div class="flex items-center">
+              <%= form.radio_button :satisfaction_score, rating, class: "focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300" %>
+              <label class="ml-2 block text-sm text-gray-700">
+                <%= rating %>
+              </label>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <%= form.label :notes, "Session Notes", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.text_area :notes, rows: 5, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+        <p class="mt-1 text-sm text-gray-500">Include your observations and feedback about the session.</p>
+      </div>
+
+      <div class="flex justify-between">
+        <%= link_to "Cancel", session_feedbacks_path,
+                    class: "px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" %>
+
+        <%= form.submit "Submit Feedback",
+                        class: "px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+      </div>
+    <% end %>
+  </div>
+</div>
