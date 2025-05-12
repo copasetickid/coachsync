@@ -57,6 +57,6 @@ class CoachingSession < ApplicationRecord
   end
 
   def mark_cancelled!
-    update!status: "cancelled")
+    update!(status: "cancelled")
   end
 end

@@ -18,4 +18,20 @@ Rails.application.routes.draw do
     get "switch_user/:user_id", to: "user_switcher#switch", as: "switch_user"
     post "reset_user", to: "user_switcher#reset", as: "reset_user"
   end
+
+  # Coach profiles
+  resources :users do
+    resource :coach_profile, only: [:show, :edit, :update] do
+      post :toggle_active, on: :member
+    end
+  end
+
+  # Coach availability management
+  resources :coaches, controller: "users", only: [] do
+    resources :availabilities, only: [:index, :new, :create, :destroy]
+  end
+
+  resources :users, only: [:show, :edit, :update] do
+    resources :availabilities, only: [:index, :new, :create, :destroy]
+  end
 end

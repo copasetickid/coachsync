@@ -1,0 +1,119 @@
+<!-- app/views/coach_profiles/show.html.erb -->
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6 flex justify-between items-center">
+    <h1 class="text-2xl font-bold">Coach Profile: <%= @user.name %></h1>
+  </div>
+
+  <div class="bg-white shadow overflow-hidden rounded-lg">
+    <div class="px-4 py-5 sm:px-6 bg-gray-50">
+      <div class="flex items-center">
+        <div class="bg-indigo-100 p-3 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <h2 class="text-xl font-medium text-gray-900"><%= @user.name %></h2>
+          <p class="text-gray-500"><%= @user.email %></p>
+        </div>
+
+        <div class="ml-auto">
+          <span class="<%= @coach_profile.active? ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %> px-3 py-1 rounded-full text-sm font-medium">
+            <%= @coach_profile.active? ? 'Active' : 'Inactive' %>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
+      <h3 class="text-lg font-medium text-gray-900 mb-2">About</h3>
+      <p class="text-gray-600 whitespace-pre-line"><%= @coach_profile.bio.present? ? @coach_profile.bio : "No bio available." %></p>
+    </div>
+  </div>
+
+  <% if @coach_profile.active? %>
+    <div class="mt-8">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold">Upcoming Availability</h2>
+
+        <% if @user == current_user %>
+          <%= link_to "Manage Availability", user_availabilities_path(@user),
+                      class: "text-indigo-600 hover:text-indigo-800" %>
+        <% end %>
+      </div>
+
+      <% if @upcoming_availabilities.present? %>
+        <div class="bg-white shadow overflow-hidden rounded-lg">
+          <ul class="divide-y divide-gray-200">
+            <% @upcoming_availabilities.each do |availability| %>
+              <li class="p-4">
+                <div class="flex justify-between items-center">
+                  <div>
+                    <p class="font-medium"><%= availability.date_string %></p>
+                    <p class="text-gray-600"><%= availability.time_range_string %></p>
+                  </div>
+
+                  <% if current_user&.student? %>
+                    <%= button_to "Book Session", bookings_path(id: availability.id),
+                                  method: :post,
+                                  class: "bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 text-sm" %>
+                  <% end %>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% else %>
+        <div class="bg-white shadow overflow-hidden rounded-lg p-6 text-center">
+          <p class="text-gray-500">No upcoming availability.</p>
+          <% if @user == current_user %>
+            <p class="mt-2">
+              <%= link_to "Add availability", new_user_availability_path(@user),
+                          class: "text-indigo-600 hover:text-indigo-800" %>
+            </p>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @user == current_user && @recent_sessions.present? %>
+    <div class="mt-8">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold">Recent Sessions</h2>
+        <%= link_to "View All", session_feedbacks_path,
+                    class: "text-indigo-600 hover:text-indigo-800" %>
+      </div>
+
+      <div class="bg-white shadow overflow-hidden rounded-lg">
+        <ul class="divide-y divide-gray-200">
+          <% @recent_sessions.each do |session| %>
+            <li class="p-4">
+              <div class="flex justify-between items-center">
+                <div>
+                  <p class="font-medium">
+                    <%= session.availability.date_string %>
+                  </p>
+                  <p class="text-gray-600">
+                    Student: <%= session.student.name %>
+                  </p>
+                </div>
+
+                <div>
+                  <% if session.status == 'completed' %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Completed
+                    </span>
+                  <% else %>
+                    <%= link_to "Add Feedback", edit_session_feedback_path(session),
+                                class: "bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm" %>
+                  <% end %>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+</div>
