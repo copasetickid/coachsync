@@ -12,19 +12,30 @@ Rails version: 8.0.2
 
 
 System dependencies
+Use Tailwind CSS for UI 
 
 
-Configuration
 
 Database 
 - Postgres DB
 
-Database initialization 
-bin/rails db:create
+### Database initialization 
+
+`bin/rails db:create`
+
+`bin/rails db:migrate`
+
+Clears the database and adds initial data
+`bin/rails db:seed`
+
+Once you have the  app installed 
+`cd coschsync`
+
+Run `bundle install` for app dependencies
+    
 
 
-How to run the test suite
+#### How to run the test suite
 
-Services (job queues, cache servers, search engines, etc.)
+`rspec` - to run the entire suite
 
-Deployment instructions
