@@ -1,0 +1,16 @@
+<!-- app/views/home/dashboard.html.erb -->
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">
+    <% if current_user.coach? %>
+      Coach Dashboard
+    <% elsif current_user.student? %>
+      Student Dashboard
+    <% end %>
+  </h1>
+
+  <% if current_user.coach? %>
+    <%= render "home/coach" %>
+  <% elsif current_user.student? %>
+    <%= render "home/student" %>
+  <% end %>
+</div>
